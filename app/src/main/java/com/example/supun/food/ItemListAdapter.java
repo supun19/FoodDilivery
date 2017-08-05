@@ -56,7 +56,7 @@ public class ItemListAdapter extends SimpleAdapter{
         TextView nameText = (TextView)vi.findViewById(R.id.listview_item_title);
         priceText = (TextView)vi.findViewById(R.id.listview_item_short_description);
 
-        Spinner options = (Spinner) vi.findViewById(R.id.listview_item_options);
+//        Spinner options = (Spinner) vi.findViewById(R.id.listview_item_options);
 
         String name = (String) data.get("listview_title");
         String price = (String) data.get("listview_price");
@@ -91,16 +91,16 @@ public class ItemListAdapter extends SimpleAdapter{
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            options.setAdapter(adapter);
-            options.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) mContext);
+//            options.setAdapter(adapter);
+//            options.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) mContext);
 //            for(int i=0;i<itemCount;i++){
 //                options.getChildAt(i).setTag(optionArray[i].split(":")[1]);
 //            }
 
-            Log.d("Item_list_Adapter", "options: " + options);
+//            Log.d("Item_list_Adapter", "options: " + options);
         }
         else{
-            options.setVisibility(View.GONE);
+//            options.setVisibility(View.GONE);
         }
 
         ImageView image=(ImageView)vi.findViewById(R.id.listview_image);

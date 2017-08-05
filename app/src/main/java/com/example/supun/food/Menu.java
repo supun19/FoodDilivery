@@ -27,10 +27,10 @@ public class Menu {
 //        WebServerCommunicationService.sendGetRequest(ctx,Constants.API_BASE_URL+Constants.API_CATEGORIES,Constants.CATEGORIES_UPDATE_ACTION);
 
     }
-    String[] imageNames={"egg","fish","chicken"};
-    String[] imageUrls = {"http://icons.iconarchive.com/icons/graphicloads/food-drink/256/egg-2-icon.png","http://www.mobilebaynep.com/assets/landing/Fish_Icon_trans.png","http://www.free-icons-download.net/images/grilled-chicken-icon-65997.png"};
-    String[] itemNames = {"Egg","Fish","Chicken"};
-    Double[] prices = {100.0,110.0,140.0};
+    String[] imageNames={"egg","fish","chicken","Vegetable"};
+    String[] imageUrls = {"http://icons.iconarchive.com/icons/graphicloads/food-drink/256/egg-2-icon.png","http://www.mobilebaynep.com/assets/landing/Fish_Icon_trans.png","http://www.free-icons-download.net/images/grilled-chicken-icon-65997.png","http://urbanorganicsonline.com/wp-content/uploads/2015/03/UO-veggie-icon.png"};
+    String[] itemNames = {"Egg","Fish","Chicken","Vegetable"};
+    Double[] prices = {110.0,120.0,140.0,100.0};
     public void updateMenuItems(Context ctx) {
 
         List<MenuItem> items = new ArrayList<>();

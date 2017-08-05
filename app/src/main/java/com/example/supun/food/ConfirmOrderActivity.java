@@ -25,6 +25,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +46,7 @@ import java.util.Set;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class ConfirmOrderActivity extends AppCompatActivity {
+public class ConfirmOrderActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
     /**
@@ -90,6 +97,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         TableLayout table = (TableLayout)ConfirmOrderActivity.this.findViewById(R.id.order_table);
         DecimalFormat decim = new DecimalFormat("0.00");
         Log.d("confirmorder","item count: "+orderList.size());
+        Double total=0.0;
         for(String key : orderList.keySet())
         {
             OrderedItem item = orderList.get(key);
@@ -100,6 +108,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             ((TextView)row.findViewById(R.id.attrib_value)).setText(decim.format(item.getPrice())+" x "+item.getQty()+" = "+decim.format(item.getPrice()*item.getQty()));
             table.addView(row);
 
+            total+=(item.getPrice()*item.getQty());
 
             try {
                 JSONObject menuItem = new JSONObject();
@@ -117,6 +126,19 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        TableRow row = (TableRow) LayoutInflater.from(ConfirmOrderActivity.this).inflate(R.layout.order_row, null);
+
+        table.addView(row);
+        row = (TableRow) LayoutInflater.from(ConfirmOrderActivity.this).inflate(R.layout.order_row, null);
+        ((TextView)row.findViewById(R.id.attrib_name)).setText("Total");
+        ((TextView)row.findViewById(R.id.attrib_name)).setTextSize(18);
+        ((TextView)row.findViewById(R.id.attrib_name)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        ((TextView)row.findViewById(R.id.attrib_value)).setText(decim.format(total)+" LKR");
+        ((TextView)row.findViewById(R.id.attrib_value)).setTextSize(18);
+        ((TextView)row.findViewById(R.id.attrib_value)).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        table.addView(row);
         table.requestLayout();     // Not sure if this is needed.
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=#8B0000>Order Confirmation</font>"));
@@ -175,6 +197,27 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         mProgressView = findViewById(R.id.login_progress);
+// Get the SupportMapFragment and request notification
+        // when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+//        View view = findViewById(R.id.map_card);
+////        view.requestLayout();
+//        int visibility = view.getVisibility();
+//        view.setVisibility(View.GONE);
+////        view.setVisibility(visibility);
+
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        // Add a marker in Sydney, Australia,
+        // and move the map's camera to the same location.
+        LatLng sydney = new LatLng(-33.85274, 151.21178);
+        googleMap.addMarker(new MarkerOptions().position(sydney)
+                .title("Marker in Sydney"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
 
     }
 
@@ -187,6 +230,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         // are available.
 
     }
+
     @Override
     protected void onDestroy(){
         super.onDestroy();
@@ -198,7 +242,15 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         }
 
     }
+    public void editOrder(View v){
+
+        finish();
+    }
+    public void editLocation(View v){
+
+    }
     public void confirmOrder(View v){
+
         showProgress(true);
         confirmButton.setEnabled(false);
         Log.d("confirmorder","confirm button clicked b "+dataToSendToBar.length()+" k "+dataToSendToBar.length());
