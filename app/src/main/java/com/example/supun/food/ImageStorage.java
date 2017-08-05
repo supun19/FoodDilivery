@@ -40,6 +40,7 @@ public class ImageStorage {
             out.flush();
             out.close();
             stored = "success";
+            GlobalState.savedImageCount++;
             Log.d("ImageStorage","Image saved");
         } catch (Exception e) {
             e.printStackTrace();

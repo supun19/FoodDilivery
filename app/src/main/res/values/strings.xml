@@ -84,4 +84,7 @@
 
     <string name="title_activity_confirm_order">Order Confirmation</string>
     <string name="confirm_order">Confirm Order</string>
+
+    <string name="location_lat">location_lat</string>
+    <string name="location_lng">location_lng</string>
 </resources>

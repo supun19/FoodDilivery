@@ -1,6 +1,8 @@
 package com.example.supun.food;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,6 +26,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -168,20 +177,26 @@ public class OrderActivity extends AppCompatActivity  implements AdapterView.OnI
 
 
     }
+
     public void orderButtonClickHandler(View v){
+
+        //if delivery location is not entered
+
+
+//        else {
 
 
 //        String message = editText.getText().toString();
-        if(order.getOrder().size()>0) {
-            Intent intent = new Intent(this, ConfirmOrderActivity.class);
-            intent.putExtra("ORDER", order.getOrder());
-            intent.putExtra("TABLE_ID", order.getTableId());
-            startActivity(intent);
-        }
-        else{
-            Toast toast = Toast.makeText(this,"Nothing to order",Toast.LENGTH_SHORT);
-            toast.show();
-        }
+            if (order.getOrder().size() > 0) {
+                Intent intent = new Intent(this, ConfirmOrderActivity.class);
+                intent.putExtra("ORDER", order.getOrder());
+                intent.putExtra("TABLE_ID", order.getTableId());
+                startActivity(intent);
+            } else {
+                Toast toast = Toast.makeText(this, "Nothing to order", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+//        }
     }
     public void addButtonClickHandler(View v){
         String item =((TextView)((LinearLayout)((ViewGroup)v.getParent().getParent().getParent()).getChildAt(1)).getChildAt(0)).getText().toString();

@@ -25,6 +25,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -65,6 +69,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
     protected int publishCount = 0;
 
     private String tableId;
+    private GoogleMap googleMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +77,11 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_confirm_order);
 
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        if(sharedPref.getString(getString(R.string.location_lng), "null").equals("null")){
+            Toast.makeText(this,"Please set the delivery location",Toast.LENGTH_LONG).show();
+            editLocation(null);
+        }
 //        TextView tableIdText = (TextView) ConfirmOrderActivity.this.findViewById(R.id.table_id_text);
 //        tableId = getIntent().getStringExtra("TABLE_ID");
 //        int tableNo = Integer.parseInt(tableId);
@@ -213,12 +223,18 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
-        LatLng sydney = new LatLng(-33.85274, 151.21178);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
 
+        double Lat=Double.parseDouble(sharedPref.getString(getString(R.string.location_lat), "0"));
+        double Lng=Double.parseDouble(sharedPref.getString(getString(R.string.location_lng), "0"));
+        Log.d("confirm_order_activity","Lng: "+Lng);
+        LatLng locaton = new LatLng(Lat,Lng);
+        googleMap.addMarker(new MarkerOptions().position(locaton)
+                .title("Delivery Location"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locaton,15));
+
+        this.googleMap = googleMap;
     }
 
     @Override
@@ -246,8 +262,43 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
 
         finish();
     }
+    int PLACE_PICKER_REQUEST = 1;
     public void editLocation(View v){
 
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+//                String toastMsg = String.format("Place: %s", place.getName());
+//                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+
+                //move to new location
+                googleMap.clear();
+                Log.d("location",place.getAddress()+": "+place.getLatLng());
+                googleMap.addMarker(new MarkerOptions().position(place.getLatLng())
+                        .title("Delivery Location"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),15));
+
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(getString(R.string.location_lat), String.valueOf(place.getLatLng().latitude));
+                editor.putString(getString(R.string.location_lng), String.valueOf(place.getLatLng().longitude));
+                editor.commit();
+
+
+
+            }
+        }
     }
     public void confirmOrder(View v){
 
