@@ -28,7 +28,7 @@ public class Menu {
 
     }
     String[] imageNames={"egg","fish","chicken","Vegetable"};
-    String[] imageUrls = {"http://icons.iconarchive.com/icons/graphicloads/food-drink/256/egg-2-icon.png","http://www.mobilebaynep.com/assets/landing/Fish_Icon_trans.png","http://www.free-icons-download.net/images/grilled-chicken-icon-65997.png","http://urbanorganicsonline.com/wp-content/uploads/2015/03/UO-veggie-icon.png"};
+    String[] imageUrls = {"http://www.freepngimg.com/thumb/egg/13-egg-png-image-thumb.png","https://www.shareicon.net/download/2016/07/08/792817_fish_512x512.png","http://www.iconshock.com/img_vista/FLAT/food/jpg/roasted_chicken_icon.jpg","https://image.flaticon.com/icons/png/128/135/135687.png"};
     String[] itemNames = {"Egg","Fish","Chicken","Vegetable"};
     Double[] prices = {110.0,120.0,140.0,100.0};
     public void updateMenuItems(Context ctx) {
@@ -45,6 +45,7 @@ public class Menu {
 
                 }
             } else {
+                GlobalState.loadingImageCount++;
                 String imgurl = imageUrls[i];
                 new GetImages(imgurl, imageName, ctx).execute();
             }

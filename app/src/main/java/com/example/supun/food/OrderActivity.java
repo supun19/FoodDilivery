@@ -62,7 +62,6 @@ public class OrderActivity extends AppCompatActivity  implements AdapterView.OnI
 //        getActionBar().setTitle("Silver Ring Village Hotel");
             getSupportActionBar().setTitle(Html.fromHtml("<font color=#8B0000>Order</font>"));
             viewPager = (ViewPager) findViewById(R.id.viewpager);
-           new Menu(getBaseContext()).updateCategories(getBaseContext());
 
 
 
