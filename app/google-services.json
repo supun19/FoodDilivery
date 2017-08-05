@@ -59,6 +59,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "257547178252-76kmq6pa033phcq02m2teofbtq112tf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.supun.food",
+            "certificate_hash": "3e619d8ecf6fff68cc7b8d2c10310602dd2d22ae"
+          }
+        },
+        {
           "client_id": "257547178252-vhvogqscbmdqqaue2nf91ih390atq232.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

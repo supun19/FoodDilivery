@@ -74,4 +74,14 @@
 
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
+    <string name="title_activity_order">OrderActivity</string>
+
+    <string name="order_button">Place the order</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="add_button">+</string>
+    <string name="remove_button">-</string>
+
+    <string name="title_activity_confirm_order">Order Confirmation</string>
+    <string name="confirm_order">Confirm Order</string>
 </resources>
