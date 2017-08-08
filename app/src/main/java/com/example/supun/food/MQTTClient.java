@@ -14,18 +14,11 @@
  *    Dave Locke - initial API and implementation and/or initial documentation
  */
 
-package com.siplo.fooddeliver;
+package com.example.supun.food;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -36,6 +29,10 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
+
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.util.Arrays;
 
 /**
  * A sample application that demonstrates how to use the Paho MQTT v3.1 Client API in
@@ -86,7 +83,7 @@ public class MQTTClient implements MqttCallback {
     boolean 			donext = false;
     private String password;
     private String userName;
-    CheckUpdatesService checkUpdatesService;
+//    CheckUpdatesService checkUpdatesService;
     private Context context;
 //    public MQTTClient() {
 //        super("CommunicationService");
@@ -110,7 +107,7 @@ public class MQTTClient implements MqttCallback {
      * Constructs an instance of the sample client wrapper
      *
      * @param context
-     * @param brokerUrl the url to connect to
+
      * @param clientId the client id to connect with
      * @param cleanSession clear state at end of connection or not (durable or non-durable subscriptions)
      * @param quietMode whether debug should be printed to standard out
@@ -127,7 +124,7 @@ public class MQTTClient implements MqttCallback {
         this.clean 	   = cleanSession;
         this.password = password;
         this.userName = userName;
-        this.checkUpdatesService = checkUpdatesService;
+
        // clientId+= randomString(5);
         //This sample stores in a temporary directory... where messages temporarily
         // stored until the message has been delivered to the server.
@@ -314,7 +311,7 @@ public class MQTTClient implements MqttCallback {
             internalBroadcast(Constants.MQTT_CONNECTION_STATE_ACTION,Constants.MQTT_CONNECTION_FAILED);
         if(cause.toString().contains("Timed out")){
             log("timed out. re-subscribing..");
-            CheckUpdatesService.startActionUpdateCheck(context);
+//            CheckUpdatesService.startActionUpdateCheck(context);
         }
        // System.exit(1);
     }

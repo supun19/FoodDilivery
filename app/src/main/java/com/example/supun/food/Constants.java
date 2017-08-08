@@ -43,6 +43,9 @@ public class Constants {
 
 
     public static final String RECORDS_KEY = "records";
+    public static final String LOCATION_KEY = "location";
+    public static final String PHONE_NUMBER_KEY = "phoneNo";
+    public static final String USERNAME_KEY = "username";
 
     public static final String ORDER_RECEIVED_TOPIC = "silver_ring_order_received";
     public static final String ORDER_COMPLETED_TOPIC = "silver_ring_order_completed";
@@ -61,8 +64,9 @@ public class Constants {
     public static int tableIdMultipler = 1000000;
     public static int localIdMultipler = 10000;
     public static int preparedInMultipler = 1000;
-    public static String MQTT_BROKER_URL = "tcp://development.enetlk.com:1884";
+    public static String MQTT_BROKER_URL = "tcp://13.58.144.197:1883";
     public static final int KITCHEN = 12;
     public static final int BAR = 13;
     public static final int WAITER_GROUP_ID = 13;
+    public static final String NEW_ORDER_TOPIC = "food_delivery_new_order";
 }

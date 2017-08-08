@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,20 +96,21 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
 
         orderList = (HashMap<String, OrderedItem>) getIntent().getSerializableExtra("ORDER");
 
-        dataToSendToBar = new JSONObject();
+
         dataToSendToKitchen = new JSONObject();
-        try {
-//            dataToSendToBar.put("TABLE",tableIdText.getText());
-//            dataToSendToKitchen.put("TABLE",tableIdText.getText());
-            dataToSendToBar.put("WAITER",GlobalState.getCurrentUsername());
-            dataToSendToKitchen.put("WAITER",GlobalState.getCurrentUsername());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            GlobalState.setCurrentUsername("Asela");
+//            dataToSendToKitchen.put("username",GlobalState.getCurrentUsername());
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         TableLayout table = (TableLayout)ConfirmOrderActivity.this.findViewById(R.id.order_table);
         DecimalFormat decim = new DecimalFormat("0.00");
         Log.d("confirmorder","item count: "+orderList.size());
         Double total=0.0;
+
+        JSONArray items = new JSONArray();
         for(String key : orderList.keySet())
         {
             OrderedItem item = orderList.get(key);
@@ -121,20 +124,30 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
             total+=(item.getPrice()*item.getQty());
 
             try {
-                JSONObject menuItem = new JSONObject();
-                menuItem.put(Constants.ITEM_QTY_KEY,orderList.get(key).getQty());
-                menuItem.put(Constants.ITEM_ID_KEY,orderList.get(key).itemId);
-                if(orderList.get(key).getPreparedIn()==Constants.KITCHEN) {
-                    dataToSendToKitchen.put(itemName, menuItem);
+                JSONArray menuItem = new JSONArray();
+                menuItem.put(orderList.get(key).getName());
+                menuItem.put(orderList.get(key).getQty());
+                menuItem.put(orderList.get(key).getPrice());
+
+                items.put(menuItem);
+
+//                if(orderList.get(key).getPreparedIn()==Constants.KITCHEN) {
+                //    dataToSendToKitchen.put(itemName, menuItem);
                     Log.d("confirmorder","kitchenItem: "+menuItem);
-                }
-                else if(orderList.get(key).getPreparedIn()==Constants.BAR){
-                    dataToSendToBar.put(itemName,menuItem);
-                    Log.d("confirmorder","barItem: "+menuItem);
-                }
+//                }
+//                else if(orderList.get(key).getPreparedIn()==Constants.BAR){
+//                    dataToSendToBar.put(itemName,menuItem);
+//                    Log.d("confirmorder","barItem: "+menuItem);
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+
+        try {
+            dataToSendToKitchen.put("items",items);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         TableRow row = (TableRow) LayoutInflater.from(ConfirmOrderActivity.this).inflate(R.layout.order_row, null);
 
@@ -304,21 +317,35 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
 
         showProgress(true);
         confirmButton.setEnabled(false);
-        Log.d("confirmorder","confirm button clicked b "+dataToSendToBar.length()+" k "+dataToSendToBar.length());
+//        Log.d("confirmorder","confirm button clicked b "+dataToSendToBar.length()+" k "+dataToSendToBar.length());
         IntentFilter filter = new IntentFilter(Constants.MQTT_PUBLISH_STATE_ACTION);
         IntentFilter filter1 = new IntentFilter(Constants.MQTT_CONNECTION_STATE_ACTION);
         this.registerReceiver(receiver, filter);
         this.registerReceiver(receiver, filter1);
 
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+
+        double Lat=Double.parseDouble(sharedPref.getString(getString(R.string.location_lat), "0"));
+        double Lng=Double.parseDouble(sharedPref.getString(getString(R.string.location_lng), "0"));
+//        Log.d("confirm_order_activity","Lng: "+Lng);
+        try {
+            dataToSendToKitchen.put("username","Buddhika");
+            dataToSendToKitchen.put("location",Lat+","+Lng);
+            dataToSendToKitchen.put("phoneNo","0715776316");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         try {
             //send notification
-//            MQTTClient mqttClient = new MQTTClient();
+            MQTTClient mqttClient = new MQTTClient();
 //            if(dataToSendToKitchen.length()>2) {
 //
-//                Log.d("confirmorder","sending to kitchen");
-//                mqttClient.initializeMQTTClient(this.getBaseContext(), "tcp://iot.eclipse.org:1883", "app:waiter"+GlobalState.getCurrentUsername(), false, false, null, null);
+                Log.d("confirmorder","sending to order");
+                mqttClient.initializeMQTTClient(this.getBaseContext(), "app:food:delivery"+GlobalState.getCurrentUsername(), false, false, null, null);
 //
-//                mqttClient.publish("new_order_kitchen", 2, dataToSendToKitchen.toString().getBytes());
+
+                mqttClient.publish("test_food_delivery_agent_app", 2, dataToSendToKitchen.toString().getBytes());
 //                publishCount++;
 //
 //            }
@@ -373,20 +400,21 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
         Set<String> itemNames = orderList.keySet();
         ActiveOrderItem activeOrderItem = null;
         OrderedItem item;
-        for (String itemName:itemNames){
-            item = orderList.get(itemName);
-            activeOrderItem = new ActiveOrderItem(itemName,String.valueOf(item.qty),Constants.ITEM_STATE_SENT,Integer.parseInt(tableId),item.orderId,item.itemId,item.price);
-//            activeOrderItem.save();
-        }
-        List<ActiveOrder> existingOrder = ActiveOrder.findWithQuery(ActiveOrder.class, "SELECT * from ACTIVE_ORDER where TABLE_ID=" +tableId);
-
-        if(existingOrder.size()==0) {
-            ActiveOrder activeOrder = new ActiveOrder(tableId);
-            activeOrder.save();
-        }
-
+//        for (String itemName:itemNames){
+//            item = orderList.get(itemName);
+//            activeOrderItem = new ActiveOrderItem(itemName,String.valueOf(item.qty),Constants.ITEM_STATE_SENT,Integer.parseInt(tableId),item.orderId,item.itemId,item.price);
+////            activeOrderItem.save();
+//        }
+//        List<ActiveOrder> existingOrder = ActiveOrder.findWithQuery(ActiveOrder.class, "SELECT * from ACTIVE_ORDER where TABLE_ID=" +tableId);
+//
+//        if(existingOrder.size()==0) {
+//            ActiveOrder activeOrder = new ActiveOrder(tableId);
+//            activeOrder.save();
+//        }
+//
         final ConfirmOrderActivity obj= this;
         showProgress(false);
+
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(obj, android.R.style.Theme_Material_Dialog_Alert);
@@ -394,7 +422,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
             builder = new AlertDialog.Builder(obj);
         }
         builder.setTitle("Order has been placed")
-                .setMessage("You will receive a notification after the order has been prepared")
+                .setMessage("You will receive a confirmation notification")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(obj, OrderActivity.class);
@@ -403,8 +431,16 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
                     }
                 })
 
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
+                .setIcon(android.R.drawable.ic_dialog_info);
+        AlertDialog alert = builder.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+//        Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+//        nbutton.setBackgroundColor(Color.MAGENTA);
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(Color.RED);
+
+
     }
 
     protected void unregisterReceiver(){
@@ -423,11 +459,11 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
                 String response = arg1.getExtras().getString(Constants.RESPONSE_KEY);
                 Log.d("mqtt", "Received to confirmOrderActivity: " + response);
                 if (response != null && response.equals(Constants.MQTT_DELIVER_SUCCESS)) {
-                    publishSuccessCount++;
-                    if(publishCount==publishSuccessCount) {
-                        UpdateBackendIntentService.startActionSendOrderToBackend(getApplicationContext(), orderList,Integer.parseInt(tableId));
+//                    publishSuccessCount++;
+//                    if(publishCount==publishSuccessCount) {
+//                        UpdateBackendIntentService.startActionSendOrderToBackend(getApplicationContext(), orderList,Integer.parseInt(tableId));
                         orderSucceed();
-                    }
+//                    }
 //                    orderSucceed();
                 }
                 else if(response != null && response.equals(Constants.MQTT_PUBLISH_FAILED)){

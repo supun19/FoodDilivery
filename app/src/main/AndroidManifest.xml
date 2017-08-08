@@ -18,9 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value=" AIzaSyCKt82ljzQpfvZCe6tVx6sFpUYiv2WmJe4" />
+
         <meta-data
             android:name="DATABASE"
             android:value="food_delivery.db" />
@@ -60,6 +58,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value=" AIzaSyCVOGcEcY7jQl3Mbqr8e2aslzThDz5k6xQ " />
     </application>
 
 </manifest>
