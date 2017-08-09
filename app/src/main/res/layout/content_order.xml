@@ -33,6 +33,6 @@
         android:layout_height="58sp"
         android:text="@string/order_button"
         android:onClick="orderButtonClickHandler"
-        android:textColor="@color/colorAccent"
+
         style="@style/ButtonStyle" />
 </LinearLayout>

@@ -11,7 +11,19 @@ public class GlobalState extends Application {
     private static boolean connected = false;
     public static int orderedItemCount=0;
     public static int loadingImageCount=0;
+    private static String currentUsername;
 
+
+
+    private static String phoneNumber;
+    private static int currrentUserId;
+    public static String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public static void setPhoneNumber(String phoneNumber) {
+        GlobalState.phoneNumber = phoneNumber;
+    }
     public static int getCurrrentUserId() {
         return currrentUserId;
     }
@@ -20,7 +32,6 @@ public class GlobalState extends Application {
         GlobalState.currrentUserId = currrentUserId;
     }
 
-    private static int currrentUserId;
 
     public static String getCurrentUsername() {
         return currentUsername;
@@ -30,7 +41,6 @@ public class GlobalState extends Application {
         GlobalState.currentUsername = currentUsername;
     }
 
-    private static String currentUsername;
 
     public static boolean isConnected() {
         return connected;

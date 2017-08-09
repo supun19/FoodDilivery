@@ -9,6 +9,14 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:name="com.orm.SugarApp"
         android:allowBackup="true"
@@ -18,7 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-
         <meta-data
             android:name="DATABASE"
             android:value="food_delivery.db" />
@@ -44,9 +51,7 @@
         </activity>
         <activity
             android:name=".OrderActivity"
-            android:label="@string/title_activity_order">
-
-        </activity>
+            android:label="@string/title_activity_order" />
         <activity
             android:name=".ConfirmOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -58,9 +63,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value=" AIzaSyCVOGcEcY7jQl3Mbqr8e2aslzThDz5k6xQ " />
+
+        <service
+            android:name=".NotifyService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

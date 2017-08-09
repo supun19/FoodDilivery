@@ -329,9 +329,9 @@ public class ConfirmOrderActivity extends AppCompatActivity implements OnMapRead
         double Lng=Double.parseDouble(sharedPref.getString(getString(R.string.location_lng), "0"));
 //        Log.d("confirm_order_activity","Lng: "+Lng);
         try {
-            dataToSendToKitchen.put("username","Buddhika");
+            dataToSendToKitchen.put("username",GlobalState.getCurrentUsername());
             dataToSendToKitchen.put("location",Lat+","+Lng);
-            dataToSendToKitchen.put("phoneNo","0715776316");
+            dataToSendToKitchen.put("phoneNo",GlobalState.getPhoneNumber());
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -58,7 +58,7 @@
                         android:background="@drawable/button"
                         android:onClick="editOrder"
                         android:text="Edit"
-                        android:textColor="@color/colorAccent" />
+                        />
                 </LinearLayout>
 
                 <TableLayout
@@ -118,7 +118,7 @@
                         android:background="@drawable/button"
                         android:onClick="editLocation"
                         android:text="Edit"
-                        android:textColor="@color/colorAccent" />
+                        />
                 </LinearLayout>
 
                 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -150,7 +150,7 @@
             android:layout_gravity="bottom"
             android:background="@drawable/button"
             android:onClick="confirmOrder"
-            android:textColor="@color/colorAccent"
+
             style="@style/ButtonStyle" />
 
 
