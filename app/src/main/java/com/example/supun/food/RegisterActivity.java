@@ -68,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
            //set reminder
            Intent myIntent = new Intent(this , NotifyService.class);
            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
            PendingIntent pendingIntent = PendingIntent.getService(this, 0, myIntent, 0);
 
            Calendar calendar = Calendar.getInstance();
